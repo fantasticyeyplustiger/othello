@@ -1,0 +1,79 @@
+1.) create test cases for the program described below then push to github
+2.) create a flowchart or pseudocode for the program described below then push to github
+3.) write the code for the program described below then push to github
+
+
+*******NOTE for TEST CASES:*********
+For this assignment there will not be an autograder for the test cases.   We still are expecting that you create the test cases first, however you do not need to write
+them in the normal format (you can still use the i: and o: format if you would like to).
+
+instead you could just list out the different cases that you will need to be sure work for example (or any other format that shows you thought of the things to test):
+
+1: input of 8,-1 or words leads to : input is not in valid range, reprompts the user and allows the player to enter a number again
+2: if space would not flip a piece :  invalid move, no pieces would be flipped and allow the user to enter new piece location
+3: Test case where black has more pieces in the end.
+
+******NOTE for the CODE************
+There is going to be a 10 submission limit to Code Grade for this assignment.
+
+
+***********Description of the Program*************
+
+For this Assignment you are going to create a 2 player text version of Othello. 
+There are 2 players:  (Black and White) Black will be the first player and represented by a "B" and White will be player2 and represented by an "W" 
+empty spaces are represented by an " "
+
+Rules of Othello -
+The game is played on an 8x8 grid.  
+The middle 4 squares are initially filled with 2 white and two black pieces, alternating colors. 
+
+see https://www.worldothello.org/about/about-othello/othello-rules/official-rules/english for instructions on othello rules. (you can also look up some videos or ask Mr Baker)
+
+Requirements for program:
+For each turn the program should prompt indicating the turn, print the "board",check if there are any valid moves, if there are valid moves prompt the player what to enter,
+place the piece on the board and flip all appropriate pieces.
+If invalid information is entered print the appropriate error message and allow the player to enter an input again.
+
+The game ends when neither player can make a move.  If one player can not make a move their turn is forfeited. 
+
+
+You must use this format below for the turns:
+
+Black's turn
+  0  1  2  3  4  5  6  7 
+0|  ,  ,  ,  ,  ,  ,  ,  ,
+1|  ,  ,  ,  ,  ,  ,  ,  ,
+2|  ,  ,  ,  ,  ,  ,  ,  ,
+3|  ,  ,  , W, B,  ,  ,  ,
+4|  ,  ,  , B, W,  ,  ,  ,
+5|  ,  ,  ,  ,  ,  ,  ,  ,
+6|  ,  ,  ,  ,  ,  ,  ,  ,
+7|  ,  ,  ,  ,  ,  ,  ,  ,
+
+enter row(0-7):
+
+
+Prompts to use:
+
+  Player inputs:
+    enter row(0-7):
+    enter col(0-7):
+  
+  if a player cannot move:  "No valid moves, turn skipped"
+  if both players were unable to play: "Neither player has valid moves, game ends."
+  if Black wins:  "Black wins"
+  if White wins: "White wins"
+  if the game ends in a tie: "tie game"
+  if the space entered is already taken: "invalid location, space is not empty"
+  if no pieces would be flipped: "invalid move, no pieces would be flipped"
+  if the row or column is outside valid range: "input is not in valid range"
+  if the row or column input is not an integer: "not an integer"
+
+For example if the last playable piece was played by black (not all spaces filled) this sequence would be printed, followed by the ending board state.
+    White's turn
+    No valid moves, turn skipped
+    Black's turn
+    Neither player has valid moves, game ends.
+    Black wins
+
+If all 64 pieces have been played it would immediately display the appropriate end game message without changing/skipping turns

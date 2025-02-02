@@ -1,0 +1,48 @@
+/*public static void printBoard(String teamColor){
+    terrible code
+        System.out.println(teamColor);
+        //the two for loops allow the entire board to be printed in a square pattern
+        for(int rowIndex = 1; rowIndex < othelloBoard.length; rowIndex++){
+            for(int colIndex = 1; colIndex < othelloBoard[rowIndex].length; colIndex++){
+                //this if-statement will print on a new line once one row's columns have been printed
+                //this is needed, so it doesn't just print a single line instead of a square
+                if(colIndex + 1 == othelloBoard[rowIndex].length){
+                    //this if-statement is needed so that it can print the x-axis label
+                    if(rowIndex == 1 && colIndex == 8){
+                        System.out.println(othelloBoard[rowIndex - 1][colIndex - 1]);
+                    }
+                    //this else makes sure that colIndex reaching 8 will print 7 and then 8 and then a new line
+                    else {
+                        System.out.print(othelloBoard[rowIndex - 1][colIndex - 1]);
+                        System.out.println(othelloBoard[rowIndex][colIndex]);
+                    }
+                }
+                //this else if just makes sure that once it reaches the last row it will print the 8th row of othelloBoard
+                //it is needed because otherwise it will only ever print up until the 7th row
+                else if(rowIndex == 8 && colIndex == 7){
+                    //prints row 7 col 6
+                    System.out.print(othelloBoard[rowIndex - 1][colIndex - 1]);
+                    //prints row 7 col 7
+                    System.out.print(othelloBoard[rowIndex - 1][colIndex]);
+                    //prints row 7 col 8 then goes to another line
+                    System.out.println(othelloBoard[rowIndex - 1][colIndex + 1]);
+                    //this for loop will proceed to print the very last row (8)
+                    for(int lastColIndex = 0; lastColIndex < othelloBoard[rowIndex].length; lastColIndex++) {
+                        if(lastColIndex == 8){
+                            System.out.println(othelloBoard[rowIndex][lastColIndex]);
+                        }
+                        else{
+                            System.out.print(othelloBoard[rowIndex][lastColIndex]);
+                        }
+                    }
+                    //breaks out of both loops
+                    break;
+                }
+                //prints values in a row
+                else{
+                    System.out.print(othelloBoard[rowIndex - 1][colIndex - 1]);
+                }
+            }
+        }
+    }
+     */

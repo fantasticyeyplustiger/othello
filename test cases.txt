@@ -1,0 +1,151 @@
+/**For this Assignment you are going to create a 2 player text version of Othello. 
+There are 2 players:  (Black and White) Black will be the first player and represented by a "B" and White will be player2 and represented by an "W" 
+empty spaces are represented by an " "
+
+Black's turn
+  0  1  2  3  4  5  6  7 
+0|  ,  ,  ,  ,  ,  ,  ,  ,
+1|  ,  ,  ,  ,  ,  ,  ,  ,
+2|  ,  ,  ,  ,  ,  ,  ,  ,
+3|  ,  ,  , W, B,  ,  ,  ,
+4|  ,  ,  , B, W,  ,  ,  ,
+5|  ,  ,  ,  ,  ,  ,  ,  ,
+6|  ,  ,  ,  ,  ,  ,  ,  ,
+7|  ,  ,  ,  ,  ,  ,  ,  ,
+
+Prompts to use:
+
+  Player inputs:
+    enter row(0-7):
+    enter col(0-7):
+  
+  if a player cannot move:  "No valid moves, turn skipped"
+  if both players were unable to play: "Neither player has valid moves, game ends."
+  if Black wins:  "Black wins"
+  if White wins: "White wins"
+  if the game ends in a tie: "tie game"
+  if the space entered is already taken: "invalid location, space is not empty"
+  if no pieces would be flipped: "invalid move, no pieces would be flipped"
+  if the row or column is outside valid range: "input is not in valid range"
+  if the row or column input is not an integer: "not an integer"
+
+For example if the last playable piece was played by black (not all spaces filled) this sequence would be printed, followed by the ending board state.
+    White's turn
+    No valid moves, turn skipped
+    Black's turn
+    Neither player has valid moves, game ends.
+    Black wins
+
+If all 64 pieces have been played it would immediately display the appropriate end game message without changing/skipping turns
+*/
+
+//board is a 2d STRING array
+
+//String[][] othelloBoard = new String[9][9];
+
+//set up nested for loop that initializes row 0 and col 0 and then sets every other value to be "1"
+//"1" = "  ,"
+//"2" = " W,"
+//"3" = " B,"
+//end of loop will set rows and columns 3-4 to 2 and 3 accordingly
+
+//to check if any pieces can be flipped (W turn)
+
+//send for loop (in a function that takes a string as a parameter, W or B,) that checks the the array for " W," and " B,"
+//for every one of those " W,"s check if the rest of the column above/below it have a combination of " B," and "  ,"
+//check rest of row left to right it as well
+//check diagonally by for loop that checks 4 different directions (+1 row +1 col per loop, -1 row +1 col, +1 row -1 col, -1 row -1col)
+//if there is a combination of " B," and " ," then pieces can be flipped and move is valid
+
+//do same for B turn
+
+//send for loop (in a function that takes a string as a parameter, W or B,) that checks the the array for " W," and " B,"
+//for every one of those " B,"s check if the rest of the column above/below it have a combination of " W," and "  ,"
+//check rest of row left to right it as well
+//check diagonally by for loop that checks 4 different directions (+1 row +1 col per loop, -1 row +1 col, +1 row -1 col, -1 row -1col)
+//if there is a combination of " W," and " ," then pieces can be flipped and move is valid
+
+//in order to flip pieces
+
+//send for loop
+//get row input and col input and input them as parameters to othelloboard 2d array
+//check if there is "  ," in that spot
+//if there is then move is valid
+//if not then move invalid and asks for another input
+//check all 8 directions for combination of " (opposite team)," and "  ,"
+//there will be at least 6 boolean checkCombo variables
+//when combo is reached every opposite team letter in that direction the combo reaches will convert to original team (if B then turns into W, for example) including the empty space
+//each checkCombo variable that is false and true will convert to original team
+//any checkCombo not assigned a value is then ignored for the next move
+//if there isnt enough space for 6 checkCombo variables in one direction or less it will simply end its own loop and go to a different direction
+//adds the amount of converted pieces to currentPieces
+//subtracts the amount of converted pieces to opposite teams currentPieces
+
+//to check if game ended
+
+//send nested for loop that checks if there is any value in othelloBoard with "  ,"
+//if there is, game hasn't ended yet
+//if there isn't, game has ended and will print who won using who won function
+
+//if whites turn then
+//check if valid move (does this by seeing if space is empty and if any black pieces can be flipped)
+//print the current board
+//get whites input
+//check which pieces were flipped
+//turn those pieces into W pieces
+
+//if blacks turn then
+//check if valid move (does this by seeing if space is empty and if any black pieces can be flipped)
+//print the current board
+//get blacks input
+//check which pieces were flipped
+//turn those pieces into B pieces
+
+//WhiteTurn class
+
+//int currentWPieces;
+
+//has the check if valid move method
+//has the flip pieces method
+//has the get currentPieces method
+
+
+//BlackTurn class
+
+//int currentBPieces = 2;
+
+//has the check if valid move method
+//has the flip pieces method
+//has the get currentPieces method
+
+//who won function
+//1 = tie, 2 = W won, 3 = B won
+//it simply counts the amount of " W," values in othelloBoard
+//if there are less than 32 print "Black wins"
+//if there are 32, print "tie game"
+//if there are more than 32, print "White wins"
+
+//check turn function (parameter is whoseTurn)
+//1 = B turn, 2 = W turn
+//returns number as a string
+//if 1 then add 1 to whoseTurn
+//if 2 then subtract 1 to whoseTurn
+
+//GAME LOOP
+
+//othello board gets created and initialized
+
+//int whoseTurn = 0;
+//(while loop starts here)
+//whoseTurn++;
+
+//check turn function
+//function checks if game ended or not
+//if game ended then who won function
+//if not:
+   //checks for valid move
+   //prints board
+   //asks for blacks input
+   //flip pieces method
+//if game ended
+//break

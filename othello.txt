@@ -1,0 +1,436 @@
+import java.util.Arrays;
+import java.util.Scanner;
+
+// COMPILED IN INTELLIJ COMMUNITY EDITION
+public class Main {
+    public static String[][] othelloBoard = new String[8][8];
+    public static int currentWPieces = 2;
+    //no currentBPieces because not needed, will get same result either way
+    public static int noValidMoves = 0;
+    public static Scanner scan = new Scanner(System.in);
+
+    public static void main(String[] args) {
+        //this makes every value in othelloBoard "  ,"
+        for(String[] oneDArray : othelloBoard){
+            Arrays.fill(oneDArray, "  ,");
+        }
+        //this will set rows and columns 3-4 to 2 and 3 accordingly
+        othelloBoard[3][3] = " W,";
+        othelloBoard[4][4] = " W,";
+        othelloBoard[3][4] = " B,";
+        othelloBoard[4][3] = " B,";
+
+        //do same for B turn
+
+        //send for loop (in a function that takes a string as a parameter, W or B), that checks the array for " W," and " B,"
+
+        //for every one of those " B,"s check if the rest of the column above/below it have a combination of " W," and "  ,"
+        //check rest of row left to right it as well
+        //check diagonally by for loop that checks 4 different directions (+1 row +1 col per loop, -1 row +1 col, +1 row -1 col, -1 row -1col)
+        //if there is a combination of " W," and " ," then pieces can be flipped and move is valid
+
+        //if whites turn then
+        //check if valid move (does this by seeing if space is empty and if any black pieces can be flipped)
+        //print the current board
+        //get whites input
+        //check which pieces were flipped
+        //turn those pieces into W pieces
+
+        //if blacks turn then
+        //check if valid move (does this by seeing if space is empty and if any black pieces can be flipped)
+        //print the current board
+        //get blacks input
+        //check which pieces were flipped
+        //turn those pieces into B pieces
+
+
+        // - - - GAME LOOP - - -
+
+        //othello board gets created and initialized
+        int turnCount = 2;
+        //(while loop starts here)
+        while(true) {
+            if(noValidMoves >= 2){
+                System.out.println("Neither player has valid moves, game ends");
+                whoWon(currentWPieces);
+            }
+            //check turn function
+            String whichPlayersTurn = checkTurn(turnCount);
+            if(whichPlayersTurn.equals(" B,")){
+                turnCount++;
+                boolean gameStatus = hasGameEnded();
+                if(gameStatus){
+                    whoWon(currentWPieces);
+                    break;
+                }
+                else{
+                    boolean isMoveValid = checkMoveValid(" B,");
+                    if(isMoveValid){
+                        printOthelloBoard("Black's turn");
+                        play(" B,");
+                    }
+                }
+            }
+            else if(whichPlayersTurn.equals(" W,")){
+                turnCount--;
+                boolean gameStatus = hasGameEnded();
+                if(gameStatus){
+                    whoWon(currentWPieces);
+                    break;
+                }
+                else{
+                    boolean isMoveValid = checkMoveValid(" W,");
+                    if(isMoveValid){
+                        printOthelloBoard("White's turn");
+                        play(" W,");
+                    }
+                }
+            }
+            //this function checks if game ended or not
+            //if game ended then who won function
+            //if not:
+            //checks for valid move
+            //prints board
+            //asks for blacks input
+            //flip pieces method
+            //if game ended
+            //break
+        }
+    }
+    public static void play(String teamColor){
+        while(true) {
+            int rowInput = 0;
+            int colInput = 0;
+            try {
+                System.out.println("enter row(0-7):");
+                rowInput = Integer.parseInt(scan.nextLine());
+                if(rowInput > 7 || rowInput < 0){
+                    System.out.println("input is not in valid range");
+                    continue;
+                }
+                System.out.println("enter col(0-7):");
+                colInput = Integer.parseInt(scan.nextLine());
+                if(colInput > 7 || colInput < 0){
+                    System.out.println("input is not in valid range");
+                    continue;
+                }
+            }
+            catch(ArrayIndexOutOfBoundsException | NullPointerException ignore){}
+            catch(NumberFormatException exception){
+                System.out.println("not an integer");
+            }
+            boolean check = canPlay(rowInput, colInput, teamColor, false);
+            if(check){
+                break;
+            }
+        }
+    }
+    //check turn function (parameter is whoseTurn)
+    public static String checkTurn(int whoseTurn){
+        //1 = B turn, 2 = W turn
+        if(whoseTurn == 1 || whoseTurn == 2){
+            //returns number as a string
+            return " B,";
+        }
+        else{
+            return " W,";
+        }
+        //if B then add 1 to whoseTurn
+        //if W then subtract 1 to whoseTurn
+    }
+
+    /**
+     * hasGameEnded - this function simply checks if game ended by searching for empty spaces.
+     * if there are any empty spaces, it means there are still moves that are possible; thus, the game hasn't ended
+     * and will return false.
+     * if there aren't any empty spaces, there are no valid moves; thus, the game has ended and will return true.
+     * @return returns a boolean which simply states if game has ended or not.
+     */
+    public static boolean hasGameEnded(){
+        for(int rowIndex = 1; rowIndex < othelloBoard.length; rowIndex++) {
+            for(int colIndex = 1; colIndex < othelloBoard[rowIndex].length; colIndex++) {
+                if(othelloBoard[rowIndex][colIndex].equals("  ,")){
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    /**
+     * if the board is full, this function gets the amount of W pieces currently and calculates who won based on it
+     * @param currentWPieces are the amount of W pieces on the board
+     */
+    public static void whoWon(int currentWPieces){
+        if(currentWPieces < 32){
+            printOthelloBoard("Black wins");
+            System.exit(0);
+        }
+        else if(currentWPieces == 32){
+            printOthelloBoard("tie game");
+        }
+        else{
+            printOthelloBoard("White wins");
+        }
+    }
+
+    /*public static void printBoard(String teamColor){
+    terrible code
+        System.out.println(teamColor);
+        //the two for loops allow the entire board to be printed in a square pattern
+        for(int rowIndex = 1; rowIndex < othelloBoard.length; rowIndex++){
+            for(int colIndex = 1; colIndex < othelloBoard[rowIndex].length; colIndex++){
+                //this if-statement will print on a new line once one row's columns have been printed
+                //this is needed, so it doesn't just print a single line instead of a square
+                if(colIndex + 1 == othelloBoard[rowIndex].length){
+                    //this if-statement is needed so that it can print the x-axis label
+                    if(rowIndex == 1 && colIndex == 8){
+                        System.out.println(othelloBoard[rowIndex - 1][colIndex - 1]);
+                    }
+                    //this else makes sure that colIndex reaching 8 will print 7 and then 8 and then a new line
+                    else {
+                        System.out.print(othelloBoard[rowIndex - 1][colIndex - 1]);
+                        System.out.println(othelloBoard[rowIndex][colIndex]);
+                    }
+                }
+                //this else if just makes sure that once it reaches the last row it will print the 8th row of othelloBoard
+                //it is needed because otherwise it will only ever print up until the 7th row
+                else if(rowIndex == 8 && colIndex == 7){
+                    //prints row 7 col 6
+                    System.out.print(othelloBoard[rowIndex - 1][colIndex - 1]);
+                    //prints row 7 col 7
+                    System.out.print(othelloBoard[rowIndex - 1][colIndex]);
+                    //prints row 7 col 8 then goes to another line
+                    System.out.println(othelloBoard[rowIndex - 1][colIndex + 1]);
+                    //this for loop will proceed to print the very last row (8)
+                    for(int lastColIndex = 0; lastColIndex < othelloBoard[rowIndex].length; lastColIndex++) {
+                        if(lastColIndex == 8){
+                            System.out.println(othelloBoard[rowIndex][lastColIndex]);
+                        }
+                        else{
+                            System.out.print(othelloBoard[rowIndex][lastColIndex]);
+                        }
+                    }
+                    //breaks out of both loops
+                    break;
+                }
+                //prints values in a row
+                else{
+                    System.out.print(othelloBoard[rowIndex - 1][colIndex - 1]);
+                }
+            }
+        }
+    }
+     */
+
+    /**
+     * printOthelloBoard - this function simply prints the current state of the othello board
+     * it does this by looping through every single value in the 2D array and printing them in the shape of a square
+     * @param teamColor prints whose turn it is
+     */
+    public static void printOthelloBoard(String teamColor){
+        System.out.println(teamColor);
+        System.out.print("  0  1  2  3  4  5  6  7");
+        for(int rowIndex = 0; rowIndex < othelloBoard.length; rowIndex++){
+            System.out.println(" ");
+            System.out.print(rowIndex + "|");
+            for(int colIndex = 0; colIndex < othelloBoard[rowIndex].length; colIndex++){
+                System.out.print(othelloBoard[rowIndex][colIndex]);
+            }
+        }
+        System.out.println(" ");
+    }
+
+    /**
+     * this function will see if a player can put in ANY move into the board
+     * it does this by looping through every single position in the othelloBoard array
+     * it will then call canPlay with the corresponding position and team color and set checkingAll to true
+     * if no moves are possible, it will print no valid moves turn skipped
+     * @param teamColor this is so canPlay knows which team to check
+     * @return returns if there is any move possible on the board
+     */
+    public static boolean checkMoveValid(String teamColor){
+        boolean anyValidMoves = false;
+        for(int rowIndex = 0; rowIndex < othelloBoard.length; rowIndex++) {
+            for(int colIndex = 0; colIndex < othelloBoard[rowIndex].length; colIndex++) {
+                anyValidMoves = canPlay(rowIndex, colIndex, teamColor, true);
+                if(anyValidMoves){
+                    noValidMoves = 0;
+                    return anyValidMoves;
+                }
+            }
+        }
+        System.out.println("No valid moves, turn skipped");
+        noValidMoves = noValidMoves + 1;
+        return anyValidMoves;
+    }
+
+    /**
+     * this function takes the inputs from the player and sees if it can put it down according to othello rules
+     * if it can, it will then proceed to flip pieces
+     * if not, move is invalid and player has to put in different inputs
+     * @param row this is the row input
+     * @param col this is the column input
+     * @param teamColor this represents the team of person playing
+     * @param checkingAll this makes sure it doesn't flip the pieces if this function is being called from checkMoveValid()
+     * @return this returns a boolean that says if the player can flip the pieces or not
+     */
+    public static boolean canPlay(int row, int col, String teamColor, boolean checkingAll) {
+        boolean validMove = true;
+        String oppositeTeamColor = "placeholder";
+        //this switch case simply initializes oppositeTeamColor
+        switch (teamColor) {
+            case " W," -> oppositeTeamColor = " B,";
+            case " B," -> oppositeTeamColor = " W,";
+        }
+        if(!othelloBoard[row][col].equals("  ,") &&! checkingAll){
+            System.out.println("invalid location, space is not empty");
+            return false;
+        }
+
+        boolean endLoop = false;
+        for(int rowModifier = -1; rowModifier <= 1; rowModifier++){
+            if(checkingAll || endLoop){
+                break;
+            }
+            for(int colModifier = -1; colModifier <= 1; colModifier++){
+                try {
+                    if (othelloBoard[row + rowModifier][col + colModifier].equals(oppositeTeamColor)) {
+                        validMove = true;
+                        endLoop = true;
+                        break;
+                    }
+                    validMove = false;
+                }
+                catch(ArrayIndexOutOfBoundsException ignore){}
+            }
+        }
+        if(!validMove){
+            return false;
+        }
+
+        boolean trueValid = false;
+        //this for loop essentially checks every single direction for a possible flank
+        //if there is, it'll flip the pieces in that direction (with help of flipPieces())
+        //if not, it checks a different direction
+        //if every single direction can't flip any pieces then the player cannot play this move
+
+        //this s will serve as a convenient multiplier
+        for (int rowModifier = -1; rowModifier <= 1; rowModifier++) {
+            if(row == 0 && rowModifier == -1){
+                rowModifier = 0;
+            }
+            //variable rowModifier is the rowModifier-axis
+            for(int colModifier = -1; colModifier <= 1; colModifier++) {
+                if(col == 0 && colModifier == -1){
+                    colModifier = 0;
+                }
+                if(rowModifier == 0 && colModifier == 0){
+                    continue;
+                }
+                //colModifier is the colModifier-axis
+                try {
+                    if(rowModifier==0 && colModifier==-1){
+                        System.out.println();
+                    }
+                    //checking checks for an opposite piece
+                    String checking = othelloBoard[row + rowModifier][col + colModifier];
+                    if (checking.equals(oppositeTeamColor)) {
+                        //this while loop will run through the direction the rowModifier and colModifier have set
+                        //so if rowModifier = 0 and colModifier = 1, this while loop will check to the right until it reaches
+                        //the end of the board (since colModifier is the x-axis)
+                        int directionContinuer = 1;
+                        // ^ 0
+                        //tempRow = row
+                        //tempCol = col
+                        while(true){
+                            directionContinuer++;
+                            //tempRow = tempRow + dirY
+                            //tempCol = tempCol + dirX
+
+                            //using example from earlier, when directionC = 2,
+                            //rowModifier * directionC = 0 and colModifier * directionC = 2 which is how it continues
+                            String secondCheck = othelloBoard[row + (rowModifier*directionContinuer)][col + (colModifier*directionContinuer)];
+                            if(secondCheck.equals(oppositeTeamColor)){
+                                continue;
+                            }
+                            if (secondCheck.equals(teamColor) && !checkingAll) {
+                                flipPieces((row), (col), rowModifier, colModifier, directionContinuer, teamColor, oppositeTeamColor);
+                                othelloBoard[row][col] = teamColor;
+                                trueValid = true;
+                                break;
+                            } else if (secondCheck.equals(teamColor)) {
+                                //no flipPieces() here so when it checks every piece for validity it also won't flip them
+                                trueValid = true;
+                                break;
+                            }
+                            else {
+                                validMove = false;
+                                break;
+                            }
+
+                            //this is to make it go for another piece of the board
+                            //so if rowModifier = 0 and colModifier = 1, the s will make the loop go
+                            //colModifier = 1, colModifier = 2, colModifier = 3, colModifier = 4, and so on
+                            //it is * and not + in order to prevent a situation where it just checks
+                            //the entire board and not just a single piece's possible moves
+                        }
+                    }
+                } catch (ArrayIndexOutOfBoundsException exception) {
+                    colModifier++;
+                }
+            }
+        }
+        if (trueValid && !checkingAll) {
+            othelloBoard[row][col] = teamColor;
+            return true;
+        }
+        if (!trueValid && !checkingAll) {
+            System.out.println("invalid move, no pieces would be flipped");
+            return false;
+        }
+        else {
+            return validMove;
+        }
+    }
+
+    /**
+     * this function will flip the opposite team's pieces in one given direction.
+     * @param row this is the "x-axis" of the piece that the original player's input connected to in order to flank
+     * @param col this is the "y-axis" of the piece that the original player's input connected to in order to flank
+     * @param rowModifier this is the x-axis that is going to go in the opposite direction to reach an opposite piece
+     * @param colModifier this is the y-axis that is going to go in the opposite direction to reach an opposite piece
+     * @param directionContinuer this lets the function flip pieces in the opposite direction
+     * @param teamColor this represents which player's turn is being used (B or W)
+     * @param oppositeTeamColor this represents the enemy's turn (W or B)
+     */
+    public static void flipPieces(int row, int col, int rowModifier, int colModifier, int directionContinuer, String teamColor, String oppositeTeamColor){
+        //canPlay() checks if an input can flank pieces by going towards a piece with the same color
+        //this will simply go the opposite way and convert any opposite color pieces with same color until
+        //it reaches another same color piece
+        //basically:
+            //canPlay() ->  (W, B, B, I) > (W, B, I, I) > (W, I, I, I) can play and flip pieces
+            //flipPieces() -> (W, I, I, I) > (W, W, I, I) > (W, W, W, I) > (W, W, W, W) done
+        while(true) {
+            directionContinuer--;
+            if(directionContinuer < 0){
+                break;
+            }
+            try {
+                String flipping = othelloBoard[row + (rowModifier * directionContinuer)][col + (colModifier * directionContinuer)];
+                if (flipping.equals(oppositeTeamColor)) {
+                    othelloBoard[row + (rowModifier * directionContinuer)][col + (colModifier * directionContinuer)] = teamColor;
+                } else if (flipping.equals("  ,")) {
+                    break;
+                } else {
+                    break;
+                }
+            }
+            //this is just in case
+            catch (ArrayIndexOutOfBoundsException exception) {
+                System.out.println("invalid move, no pieces would be flipped");
+                break;
+            }
+        }
+    }
+}
